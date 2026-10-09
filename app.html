@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+window.onerror=function(msg,src,line,col,err){window.parent.postMessage({type:'app-error',message:msg,source:src,lineno:line,colno:col,stack:err&&err.stack||''},'*');};
+window.onunhandledrejection=function(e){window.parent.postMessage({type:'app-error',message:'Unhandled promise rejection: '+(e.reason&&e.reason.message||e.reason||'unknown'),stack:e.reason&&e.reason.stack||''},'*');};
+window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&t.tagName==='SCRIPT'){var u=t.src||'';window.parent.postMessage({type:'app-error',message:'Failed to load script'+(u?': '+u:' (inline module)'),source:u},'*');}},true);
+(function(){var _f=window.fetch;window.fetch=function(){var a=arguments,u=typeof a[0]==='string'?a[0]:(a[0]&&a[0].url)||'';var p=_f.apply(this,a);p.then(function(r){if(r.status===500){r.clone().text().then(function(b){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:b},'*');}).catch(function(){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:''},'*');});}}).catch(function(e){window.parent.postMessage({type:'fetch-error',url:u,status:0,body:e.message||'fetch failed'},'*');});return p;};})();
+</script>
+<script src="https://builder.puter.com/runtime.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TheDivineX AI — Chat</title>
+<meta name="theme-color" content="#4F46E5">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tailwind-output.css">
+<script src="https://js.puter.com/v2/"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+    <!-- puter-pwa: generated, do not edit -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TheDivineX">
+    <!-- /puter-pwa -->
+</head>
+<body class="bg-white text-slate-900 antialiased h-[100dvh] overflow-hidden">
+
+<!-- Sign-in gate -->
+<div id="gate" class="hidden h-full flex items-center justify-center px-6">
+  <div class="max-w-sm w-full text-center">
+    <img src="icon.svg" class="w-14 h-14 rounded-2xl mx-auto" alt="">
+    <h1 class="mt-6 text-2xl font-bold tracking-tight">Welcome to TheDivineX AI</h1>
+    <p class="mt-2 text-sm text-slate-500">Sign in to start chatting. Your conversations are saved securely to your account.</p>
+    <button id="signInBtn" class="mt-8 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700">
+      <i data-lucide="log-in" class="w-4 h-4"></i> Sign in to continue
+    </button>
+    <a href="index.html" class="mt-4 inline-block text-sm text-slate-500 hover:text-slate-900">← Back to home</a>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden h-full flex">
+  <!-- Sidebar -->
+  <div id="scrim" class="fixed inset-0 bg-slate-900/30 z-30 hidden md:hidden"></div>
+  <aside id="sidebar" class="fixed md:static z-40 inset-y-0 left-0 w-72 bg-slate-50 border-r border-slate-200 flex flex-col -translate-x-full md:translate-x-0 transition-transform">
+    <div class="p-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 font-semibold px-2"><img src="icon.svg" class="w-7 h-7 rounded-lg" alt=""> TheDivineX AI</a>
+      <button id="closeSidebar" class="md:hidden p-2 rounded-lg hover:bg-slate-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+    </div>
+    <div class="px-3">
+      <button id="newChatBtn" class="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-medium hover:bg-slate-100">
+        <i data-lucide="square-pen" class="w-4 h-4"></i> New chat
+      </button>
+      <div class="relative mt-2">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input id="searchInput" placeholder="Search chats" class="w-full pl-9 pr-3 py-2 text-sm rounded-xl bg-transparent border border-transparent focus:border-slate-200 focus:bg-white outline-none">
+      </div>
+    </div>
+    <div id="chatList" class="flex-1 overflow-y-auto px-3 pb-3 mt-2 text-sm"></div>
+    <div class="p-3 border-t border-slate-200 space-y-1">
+      <a href="index.html#pricing" class="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-200/60 text-sm">
+        <span class="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center"><i data-lucide="sparkles" class="w-4 h-4 text-indigo-600"></i></span>
+        <span><span class="block font-medium">Upgrade to Plus</span><span class="block text-xs text-slate-500">Only $8/mo · 60% off</span></span>
+      </a>
+      <div class="flex items-center gap-3 px-2 py-2 rounded-xl text-sm">
+        <span id="avatar" class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold text-xs">U</span>
+        <span id="username" class="flex-1 truncate font-medium"></span>
+        <button id="signOutBtn" title="Sign out" class="p-2 rounded-lg hover:bg-slate-200"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 flex flex-col min-w-0">
+    <header class="h-14 shrink-0 flex items-center gap-2 px-3 border-b border-slate-100">
+      <button id="openSidebar" class="md:hidden p-2 rounded-lg hover:bg-slate-100"><i data-lucide="menu" class="w-5 h-5"></i></button>
+      <div class="relative">
+        <button id="modelBtn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-slate-100 font-semibold">
+          <span id="modelLabel">DivineX Fast</span> <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        </button>
+        <div id="modelMenu" class="hidden absolute top-full left-0 mt-1 w-72 rounded-2xl border border-slate-200 bg-white p-1.5 z-20"></div>
+      </div>
+      <div class="ml-auto flex items-center gap-1">
+        <button id="newChatTop" title="New chat" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="square-pen" class="w-5 h-5"></i></button>
+      </div>
+    </header>
+
+    <div id="scroller" class="flex-1 overflow-y-auto">
+      <!-- Empty state -->
+      <div id="empty" class="h-full flex flex-col items-center justify-center px-5 text-center">
+        <img src="icon.svg" class="w-12 h-12 rounded-xl" alt="">
+        <h2 class="mt-5 text-2xl sm:text-3xl font-semibold tracking-tight">How can I help you today?</h2>
+        <div id="suggestions" class="mt-8 grid sm:grid-cols-2 gap-2.5 w-full max-w-2xl"></div>
+      </div>
+      <div id="messages" class="hidden max-w-3xl mx-auto px-4 py-6 space-y-6"></div>
+    </div>
+
+    <!-- Composer -->
+    <div class="shrink-0 px-4 pb-4 pt-2">
+      <form id="composer" class="max-w-3xl mx-auto rounded-2xl border border-slate-200 bg-white focus-within:border-slate-300 p-2">
+        <textarea id="input" rows="1" placeholder="Message TheDivineX…" class="w-full resize-none outline-none px-2.5 py-2 text-[15px] max-h-48 bg-transparent"></textarea>
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs text-slate-400 px-1.5" id="modelHint">Fast · great for everyday tasks</span>
+          <button id="sendBtn" type="submit" class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center disabled:bg-slate-200 disabled:text-slate-400" disabled>
+            <i data-lucide="arrow-up" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </form>
+      <p class="text-center text-xs text-slate-400 mt-2">TheDivineX can make mistakes. Check important info.</p>
+    </div>
+  </main>
+</div>
+
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-sm px-4 py-2 rounded-lg"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

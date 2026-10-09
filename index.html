@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+window.onerror=function(msg,src,line,col,err){window.parent.postMessage({type:'app-error',message:msg,source:src,lineno:line,colno:col,stack:err&&err.stack||''},'*');};
+window.onunhandledrejection=function(e){window.parent.postMessage({type:'app-error',message:'Unhandled promise rejection: '+(e.reason&&e.reason.message||e.reason||'unknown'),stack:e.reason&&e.reason.stack||''},'*');};
+window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&t.tagName==='SCRIPT'){var u=t.src||'';window.parent.postMessage({type:'app-error',message:'Failed to load script'+(u?': '+u:' (inline module)'),source:u},'*');}},true);
+(function(){var _f=window.fetch;window.fetch=function(){var a=arguments,u=typeof a[0]==='string'?a[0]:(a[0]&&a[0].url)||'';var p=_f.apply(this,a);p.then(function(r){if(r.status===500){r.clone().text().then(function(b){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:b},'*');}).catch(function(){window.parent.postMessage({type:'fetch-error',url:u,status:500,body:''},'*');});}}).catch(function(e){window.parent.postMessage({type:'fetch-error',url:u,status:0,body:e.message||'fetch failed'},'*');});return p;};})();
+</script>
+<script src="https://builder.puter.com/runtime.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheDivineX AI — Your smart AI assistant, 60% less</title>
+<meta name="description" content="TheDivineX AI is a powerful AI chat assistant for writing, coding, research and more — at 60% less than leading alternatives.">
+<meta name="theme-color" content="#4F46E5">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tailwind-output.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Inter,system-ui,sans-serif}
+  .billing-btn[aria-pressed="true"]{background:#fff;color:#0f172a;border-color:#e2e8f0}
+</style>
+    <!-- puter-pwa: generated, do not edit -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TheDivineX">
+    <!-- /puter-pwa -->
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+<!-- Nav -->
+<header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-100">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2.5 font-bold text-lg">
+      <img src="icon.svg" alt="" class="w-8 h-8 rounded-lg"> TheDivineX AI
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-slate-600">
+      <a href="#features" class="hover:text-slate-900">Features</a>
+      <a href="#pricing" class="hover:text-slate-900">Pricing</a>
+      <a href="#compare" class="hover:text-slate-900">Compare</a>
+      <a href="#faq" class="hover:text-slate-900">FAQ</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="app.html" class="hidden sm:inline-flex text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-100">Log in</a>
+      <a href="app.html" class="inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Start chatting <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="max-w-6xl mx-auto px-5 pt-20 pb-16 text-center">
+  <div class="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+    <i data-lucide="badge-percent" class="w-3.5 h-3.5"></i> Premium AI at 60% less
+  </div>
+  <h1 class="mt-6 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
+    Your AI assistant for<br class="hidden sm:block"> <span class="text-indigo-600">everything you do</span>
+  </h1>
+  <p class="mt-6 text-lg text-slate-600 max-w-2xl mx-auto">
+    Write, code, learn, and brainstorm with TheDivineX, which runs on leading AI models. You get the same productivity for less than half the price.
+  </p>
+  <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+    <a href="app.html" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700"><i data-lucide="message-square" class="w-4 h-4"></i> Try TheDivineX free</a>
+    <a href="#pricing" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-200 font-medium hover:bg-slate-50">See pricing</a>
+  </div>
+
+  <!-- Preview mock -->
+  <div class="mt-16 max-w-3xl mx-auto text-left rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:p-6">
+    <div class="flex items-center gap-1.5 mb-5"><span class="w-3 h-3 rounded-full bg-slate-300"></span><span class="w-3 h-3 rounded-full bg-slate-300"></span><span class="w-3 h-3 rounded-full bg-slate-300"></span></div>
+    <div class="flex justify-end"><div class="bg-white border border-slate-200 rounded-2xl rounded-br-md px-4 py-2.5 text-sm max-w-md">Write a short launch tweet for my new coffee shop app.</div></div>
+    <div class="mt-4 flex gap-3">
+      <img src="icon.svg" class="w-7 h-7 rounded-md shrink-0" alt="">
+      <div class="text-sm text-slate-700 leading-relaxed">Your morning ritual just got smarter. Order ahead, skip the line, and earn rewards with every sip. <b>BrewNow</b> is live today. Download now and get your first latte free!</div>
+    </div>
+    <div class="mt-6 flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-400">
+      Message TheDivineX… <i data-lucide="arrow-up" class="ml-auto w-7 h-7 p-1.5 rounded-lg bg-indigo-600 text-white"></i>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="border-t border-slate-100 bg-slate-50/60">
+  <div class="max-w-6xl mx-auto px-5 py-20">
+    <div class="text-center max-w-2xl mx-auto">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Everything you need in one place</h2>
+      <p class="mt-4 text-slate-600">Powerful features, simple design, honest pricing.</p>
+    </div>
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="featureGrid"></div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center max-w-2xl mx-auto">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Simple pricing. 60% off.</h2>
+    <p class="mt-4 text-slate-600">Every paid plan costs 60% less than the comparable ChatGPT plan.</p>
+    <div class="mt-6 inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 text-sm">
+      <button class="billing-btn px-4 py-1.5 rounded-lg border border-transparent font-medium" data-billing="monthly" aria-pressed="true">Monthly</button>
+      <button class="billing-btn px-4 py-1.5 rounded-lg border border-transparent font-medium" data-billing="yearly" aria-pressed="false">Yearly <span class="text-indigo-600">−2 months</span></button>
+    </div>
+  </div>
+  <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="plans"></div>
+  <p class="mt-6 text-center text-xs text-slate-400">Comparison based on publicly listed ChatGPT USD monthly prices (Plus $20, Pro $200, Team $30/user). ChatGPT is a trademark of OpenAI. TheDivineX AI is an independent product and is not affiliated with OpenAI.</p>
+</section>
+
+<!-- Compare -->
+<section id="compare" class="border-t border-slate-100 bg-slate-50/60">
+  <div class="max-w-4xl mx-auto px-5 py-20">
+    <h2 class="text-3xl font-bold tracking-tight text-center">How much you save</h2>
+    <div class="mt-10 rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr><th class="px-5 py-3 font-medium">Plan</th><th class="px-5 py-3 font-medium">ChatGPT</th><th class="px-5 py-3 font-medium">TheDivineX AI</th><th class="px-5 py-3 font-medium text-right">You save / year</th></tr>
+        </thead>
+        <tbody id="compareRows" class="divide-y divide-slate-100"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="max-w-3xl mx-auto px-5 py-20">
+  <h2 class="text-3xl font-bold tracking-tight text-center">Frequently asked questions</h2>
+  <div class="mt-10 divide-y divide-slate-200 border-y border-slate-200" id="faqList"></div>
+</section>
+
+<!-- CTA -->
+<section class="max-w-6xl mx-auto px-5 pb-20">
+  <div class="rounded-3xl bg-indigo-600 text-white px-8 py-14 text-center">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Start chatting with TheDivineX today</h2>
+    <p class="mt-3 text-indigo-100">Free to start. No credit card required.</p>
+    <a href="app.html" class="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-indigo-700 font-semibold hover:bg-indigo-50">Open TheDivineX <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+  </div>
+</section>
+
+<footer class="border-t border-slate-100">
+  <div class="max-w-6xl mx-auto px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+    <div class="flex items-center gap-2"><img src="icon.svg" class="w-6 h-6 rounded-md" alt=""> © <span id="yr"></span> TheDivineX AI. All rights reserved.</div>
+    <div class="flex gap-6"><a href="#" class="hover:text-slate-900">Privacy</a><a href="#" class="hover:text-slate-900">Terms</a><a href="#" class="hover:text-slate-900">Contact</a></div>
+  </div>
+</footer>
+
+<script type="module">
+import { createIcons, icons } from 'https://cdn.jsdelivr.net/npm/lucide@latest/+esm';
+
+const features = [
+  ['message-square-text','Natural conversations','Ask anything and get clear, helpful answers in real time.'],
+  ['code-2','Code assistant','Write, explain and debug code in dozens of languages.'],
+  ['pen-line','Writing studio','Draft emails, essays, posts and stories in seconds.'],
+  ['layers','Multiple AI models','Switch between fast and advanced models in one click.'],
+  ['history','Saved history','Your conversations sync securely to your account.'],
+  ['shield-check','Private & secure','Your data belongs to you. We never sell it.'],
+];
+featureGrid.innerHTML = features.map(([i,t,d])=>`
+  <div class="rounded-2xl border border-slate-200 bg-white p-6">
+    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="${i}" class="w-5 h-5"></i></div>
+    <h3 class="mt-4 font-semibold">${t}</h3>
+    <p class="mt-1.5 text-sm text-slate-600">${d}</p>
+  </div>`).join('');
+
+// ChatGPT reference monthly prices → TheDivineX = 40% of that (60% off)
+const plans = [
+  { name:'Free', gpt:0, desc:'Get started with everyday AI.', unit:'', cta:'Start free', feats:['Fast model access','Standard response speed','Chat history','Web & mobile access'] },
+  { name:'Plus', gpt:20, desc:'More power for daily work.', unit:'/mo', cta:'Get Plus', popular:true, feats:['Everything in Free','Advanced models','5× higher message limits','Priority speed','Early access to features'] },
+  { name:'Pro', gpt:200, desc:'Maximum power for experts.', unit:'/mo', cta:'Get Pro', feats:['Everything in Plus','Unlimited advanced models','Longest context window','Fastest responses','Priority support'] },
+  { name:'Team', gpt:30, desc:'Collaborate with your team.', unit:'/user/mo', cta:'Get Team', feats:['Everything in Plus','Shared workspace','Admin console','Data excluded from training','Min. 2 users'] },
+];
+const nova = p => +(p*0.4).toFixed(2);
+let billing = 'monthly';
+const money = n => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+
+function renderPlans(){
+  plans_el();
+  createIcons({icons});
+}
+function plans_el(){
+  document.getElementById('plans').innerHTML = plans.map(p=>{
+    const m = nova(p.gpt);
+    const price = billing==='yearly' ? +(m*10/12).toFixed(2) : m;
+    const pop = p.popular;
+    return `
+    <div class="relative rounded-2xl border ${pop?'border-indigo-600 ring-1 ring-indigo-600':'border-slate-200'} bg-white p-6 flex flex-col">
+      ${pop?'<span class="absolute -top-3 left-6 text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-600 text-white">Most popular</span>':''}
+      <h3 class="font-semibold text-lg">${p.name}</h3>
+      <p class="text-sm text-slate-500 mt-1">${p.desc}</p>
+      <div class="mt-5 flex items-end gap-2">
+        <span class="text-4xl font-extrabold tracking-tight">${money(price)}</span>
+        <span class="text-sm text-slate-500 mb-1">${p.unit}</span>
+      </div>
+      <div class="mt-2 h-5 text-xs">
+        ${p.gpt?`<span class="text-slate-400 line-through">ChatGPT ${money(p.gpt)}${p.unit}</span> <span class="ml-1 font-semibold text-emerald-600">Save 60%</span>`:'<span class="text-slate-400">Free forever</span>'}
+      </div>
+      ${billing==='yearly'&&p.gpt?`<div class="text-xs text-slate-500 mt-1">Billed ${money(+(m*10).toFixed(2))}/year</div>`:'<div class="text-xs mt-1">&nbsp;</div>'}
+      <a href="app.html" class="mt-5 text-center text-sm font-medium py-2.5 rounded-xl ${pop?'bg-indigo-600 text-white hover:bg-indigo-700':'border border-slate-200 hover:bg-slate-50'}">${p.cta}</a>
+      <ul class="mt-6 space-y-2.5 text-sm text-slate-600">
+        ${p.feats.map(f=>`<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"></i>${f}</li>`).join('')}
+      </ul>
+    </div>`;
+  }).join('');
+}
+document.querySelectorAll('.billing-btn').forEach(b=>b.onclick=()=>{
+  billing=b.dataset.billing;
+  document.querySelectorAll('.billing-btn').forEach(x=>x.setAttribute('aria-pressed', x===b));
+  renderPlans();
+});
+
+compareRows.innerHTML = plans.filter(p=>p.gpt).map(p=>`
+  <tr>
+    <td class="px-5 py-4 font-medium">${p.name}</td>
+    <td class="px-5 py-4 text-slate-500">${money(p.gpt)}${p.unit}</td>
+    <td class="px-5 py-4 font-semibold text-indigo-600">${money(nova(p.gpt))}${p.unit}</td>
+    <td class="px-5 py-4 text-right font-semibold text-emerald-600">${money(+((p.gpt-nova(p.gpt))*12).toFixed(2))}${p.name==='Team'?'/user':''}</td>
+  </tr>`).join('');
+
+const faqs = [
+  ['How can TheDivineX be 60% cheaper?','We run on efficient infrastructure and pass the savings to you. You still get access to top AI models.'],
+  ['Is there a free plan?','Yes. The Free plan lets you chat with our fast model at no cost and with no credit card.'],
+  ['Can I cancel anytime?','Yes. You can cancel your plan whenever you like, and you keep access until the end of your billing period.'],
+  ['Is TheDivineX affiliated with OpenAI or ChatGPT?','No. TheDivineX AI is an independent product with its own brand. We mention ChatGPT pricing only so you can compare.'],
+  ['Is my data private?','Your conversations are stored securely in your own account, and we never sell your data.'],
+];
+faqList.innerHTML = faqs.map(([q,a])=>`
+  <details class="group py-5">
+    <summary class="flex justify-between items-center cursor-pointer list-none font-medium">${q}<i data-lucide="plus" class="w-4 h-4 text-slate-400 group-open:rotate-45 transition"></i></summary>
+    <p class="mt-3 text-sm text-slate-600">${a}</p>
+  </details>`).join('');
+
+yr.textContent = new Date().getFullYear();
+renderPlans();
+</script>
+</body>
+</html>
+
