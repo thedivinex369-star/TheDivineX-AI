@@ -22,3 +22,4 @@ Thumbs.db
 # Temporary model files
 services/models.tmp.js
 services/models.js.live-capability-backup
+.vercel
