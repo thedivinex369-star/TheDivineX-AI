@@ -517,7 +517,7 @@ function msgHTML(message, index) {
       <div class="prose-nova">${md(message.content)}</div>
       <div class="flex items-center gap-1 mt-2 text-slate-400">
         <button type="button" data-copy="${index}" title="Copy" aria-label="Copy response" class="p-1.5 rounded-md hover:bg-slate-100 hover:text-slate-700"><i data-lucide="copy" class="w-4 h-4"></i></button>
-        <button type="button" data-regen="${index}" title="Regenerate" aria-label="Regenerate response" class="p-1.5 rounded-md hover:bg-slate-100 hover:text-slate-700"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+        <button type="button" data-regen="${index}" title="${message.failed ? "Retry" : "Regenerate"}" aria-label="${message.failed ? "Retry failed response" : "Regenerate response"}" class="p-1.5 rounded-md hover:bg-slate-100 hover:text-slate-700"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
         <button type="button" data-feedback="${index}" data-value="like" title="Good response" aria-label="Like response" aria-pressed="${message.feedback === 'like'}" class="p-1.5 rounded-md ${likeClass}"><i data-lucide="thumbs-up" class="w-4 h-4"></i></button>
         <button type="button" data-feedback="${index}" data-value="dislike" title="Bad response" aria-label="Dislike response" aria-pressed="${message.feedback === 'dislike'}" class="p-1.5 rounded-md ${dislikeClass}"><i data-lucide="thumbs-down" class="w-4 h-4"></i></button>
       </div>
@@ -665,7 +665,7 @@ async function respond() {
     autosize();
   }
 
-  chat.messages.push({ role: 'assistant', content: output });
+  chat.messages.push({ role: 'assistant', content: output, failed });
 
   const meta = state.chats.find(item => item.id === chat.id);
   if (meta) {
