@@ -28,74 +28,29 @@ body{font-family:Inter,system-ui,sans-serif}
 .dot{width:6px;height:6px;border-radius:50%;background:#94a3b8;animation:bounce 1.2s infinite}
 .dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-4px);opacity:1}}
-/* TheDivineX AI - FINAL MOBILE SIDEBAR FIX */
-@media (max-width: 767px) {
-  #sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: auto !important;
-    width: 18rem !important;
-    max-width: 85vw !important;
-    z-index: 50 !important;
-    transform: none !important;
-    translate: -100% 0 !important;
-    transition: translate .25s ease !important;
-  }
 
-  #sidebar.sidebar-open,
-  #sidebar.open {
-    transform: none !important;
-    translate: 0 0 !important;
-  }
-
-  #scrim {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 40 !important;
-  }
-
-  #scrim.hidden {
-    display: none !important;
-  }
-
-  #scrim:not(.hidden) {
-    display: block !important;
-  }
+/* TheDivineX AI — Single Tailwind v4 compatible sidebar fix */
+#sidebar {
+  transform: none !important;
 }
-@'
-
-/* =========================================================
-   TheDivineX AI — MOBILE SIDEBAR FINAL FIX
-   Tailwind v4 compatible
-   ========================================================= */
 
 @media (max-width: 767px) {
-
   #sidebar {
     position: fixed !important;
     top: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
     right: auto !important;
-
     width: 18rem !important;
     max-width: 85vw !important;
-
     z-index: 50 !important;
-
-    /* Tailwind v4 uses translate independently */
     transform: none !important;
     translate: -100% 0 !important;
-
-    transition:
-      translate 0.25s ease-in-out !important;
+    transition: translate 0.25s ease-in-out !important;
   }
 
   #sidebar.sidebar-open,
   #sidebar.open {
-    transform: none !important;
     translate: 0 0 !important;
   }
 
@@ -114,64 +69,8 @@ body{font-family:Inter,system-ui,sans-serif}
   }
 }
 
-/* Desktop — sidebar remains normal */
 @media (min-width: 768px) {
   #sidebar {
     translate: 0 0 !important;
   }
-}
-
-'@ | Add-Content "C:\Users\Now You See Me\OneDrive\Desktop\TheDivineX_AI\app.css"
-/* =========================================================
-   TheDivineX AI - ChatGPT Style Collapsible Sidebar
-   ========================================================= */
-
-#sidebar {
-    position: fixed !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 342px !important;
-    max-width: 90vw !important;
-    z-index: 50 !important;
-
-    transform: none !important;
-    translate: -100% 0 !important;
-
-    transition:
-        translate 0.25s ease,
-        box-shadow 0.25s ease !important;
-
-    box-shadow: none !important;
-}
-
-/* OPEN */
-#sidebar.sidebar-open,
-#sidebar.open {
-    transform: none !important;
-    translate: 0 0 !important;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.12) !important;
-}
-
-/* Overlay */
-#scrim {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 40 !important;
-}
-
-#scrim.hidden {
-    display: none !important;
-}
-
-#scrim:not(.hidden) {
-    display: block !important;
-}
-
-/* Mobile */
-@media (max-width: 767px) {
-    #sidebar {
-        width: 18rem !important;
-        max-width: 85vw !important;
-    }
 }
