@@ -609,6 +609,7 @@ async function openChat(id) {
   try {
     const messages = await chatService.load(id);
     state.current = { id, messages: Array.isArray(messages) ? messages : [] };
+    sessionStorage.setItem('tdx:activeChatId', id);
     input.value = '';
     input.style.height = 'auto';
     input.scrollTop = 0;
@@ -627,6 +628,7 @@ async function openChat(id) {
 function newChat() {
   if (state.busy) return;
   state.current = null;
+  sessionStorage.removeItem('tdx:activeChatId');
   input.value = '';
   input.style.height = 'auto';
   input.scrollTop = 0;
@@ -777,8 +779,14 @@ async function boot() {
 
   renderList();
 
-  // Start with a fresh chat while preserving saved conversations in history.
-  newChat();
+  // Restore the active chat after refresh.
+  const activeChatId = sessionStorage.getItem('tdx:activeChatId');
+  if (activeChatId && state.chats.some(chat => chat.id === activeChatId)) {
+    await openChat(activeChatId);
+  } else {
+    sessionStorage.removeItem('tdx:activeChatId');
+    newChat();
+  }
   icon();
 }
 
@@ -881,6 +889,7 @@ if (window.matchMedia) {
 $('signInBtn').onclick = async () => {
   try {
     await authService.signIn();
+    sessionStorage.removeItem('tdx:activeChatId');
     await boot();
   } catch (error) {
     console.warn('[Auth] sign in failed:', error);
