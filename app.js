@@ -837,6 +837,101 @@ $('renameChatSave').onclick = async () => {
   }
 };
 
+// TDX_CHAT_EXPORT_V1
+function exportCurrentChat(format) {
+  const current = state.current;
+  if (!current || !current.id || !Array.isArray(current.messages) || !current.messages.length) {
+    toast('Open a chat with messages before exporting');
+    return;
+  }
+
+  const meta = state.chats.find(chat => chat.id === current.id) || {};
+  const safeTitle = String(meta.title || 'conversation')
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, '-')
+    .trim()
+    .slice(0, 70) || 'conversation';
+
+  let content;
+  let mime;
+  let extension;
+
+  if (format === 'json') {
+    content = JSON.stringify({
+      format: 'TheDivineX-AI-chat',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      chat: {
+        id: current.id,
+        title: meta.title || 'Conversation',
+        model: meta.model || null,
+        updated: meta.updated || null,
+        messages: current.messages
+      }
+    }, null, 2);
+    mime = 'application/json;charset=utf-8';
+    extension = 'json';
+  } else if (format === 'txt') {
+    content = current.messages.map(message => {
+      const role = String(message.role || 'message').toUpperCase();
+      const text = typeof message.content === 'string'
+        ? message.content
+        : JSON.stringify(message.content ?? '');
+      return `${role}\n${text}`;
+    }).join('\n\n--------------------\n\n');
+    mime = 'text/plain;charset=utf-8';
+    extension = 'txt';
+  } else {
+    toast('Unsupported export format');
+    return;
+  }
+
+  const blob = new Blob(['\uFEFF', content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${safeTitle}.${extension}`;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(`Chat exported as ${extension.toUpperCase()}`);
+}
+
+$('exportChatBtn').onclick = event => {
+  const existing = $('exportChatMenu');
+  if (existing) {
+    existing.remove();
+    return;
+  }
+
+  const menu = document.createElement('div');
+  menu.id = 'exportChatMenu';
+  menu.className = 'absolute right-16 top-12 z-50 w-48 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl text-slate-800';
+  menu.innerHTML = `
+    <button type="button" data-export-format="json" class="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100">Download JSON</button>
+    <button type="button" data-export-format="txt" class="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-100">Download TXT</button>
+  `;
+
+  $('exportChatBtn').parentElement.style.position = 'relative';
+  $('exportChatBtn').parentElement.appendChild(menu);
+};
+
+document.addEventListener('click', event => {
+  const formatButton = event.target.closest('[data-export-format]');
+  const menu = $('exportChatMenu');
+
+  if (formatButton) {
+    exportCurrentChat(formatButton.dataset.exportFormat);
+    menu?.remove();
+    return;
+  }
+
+  if (menu && !menu.contains(event.target) && !event.target.closest('#exportChatBtn')) {
+    menu.remove();
+  }
+});
+
 $('settingsBtn').onclick = openSettings;
 $('settingsClose').onclick = closeSettings;
 $('settingsCancel').onclick = closeSettings;
