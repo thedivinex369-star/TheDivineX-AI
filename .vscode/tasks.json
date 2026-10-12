@@ -1,0 +1,55 @@
+{
+    "version":  "2.0.0",
+    "tasks":  [
+                  {
+                      "label":  "TheDivineX: Check",
+                      "type":  "shell",
+                      "command":  "npm",
+                      "args":  [
+                                   "run",
+                                   "tdx:check"
+                               ],
+                      "problemMatcher":  [
+
+                                         ],
+                      "group":  "build"
+                  },
+                  {
+                      "label":  "TheDivineX: Backup",
+                      "type":  "shell",
+                      "command":  "npm",
+                      "args":  [
+                                   "run",
+                                   "tdx:backup"
+                               ],
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
+                      "label":  "TheDivineX: Git Status",
+                      "type":  "shell",
+                      "command":  "npm",
+                      "args":  [
+                                   "run",
+                                   "tdx:status"
+                               ],
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
+                      "label":  "TheDivineX: Deploy Production",
+                      "type":  "shell",
+                      "command":  "npm",
+                      "args":  [
+                                   "run",
+                                   "tdx:deploy"
+                               ],
+                      "problemMatcher":  [
+
+                                         ],
+                      "group":  "build"
+                  }
+              ]
+}

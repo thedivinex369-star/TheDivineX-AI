@@ -1,18 +1,25 @@
 {
-  "name": "thedivinex_ai",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx @tailwindcss/cli -i ./tailwind.css -o ./tailwind-output.css"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "devDependencies": {
-    "@tailwindcss/cli": "^4.3.3",
-    "tailwindcss": "^4.3.3"
-  }
+    "name":  "thedivinex_ai",
+    "version":  "1.0.0",
+    "description":  "",
+    "main":  "app.js",
+    "scripts":  {
+                    "test":  "echo \"Error: no test specified\" \u0026\u0026 exit 1",
+                    "build":  "npx @tailwindcss/cli -i ./tailwind.css -o ./tailwind-output.css",
+                    "tdx":  "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/tdx.ps1",
+                    "tdx:check":  "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/tdx.ps1 check",
+                    "tdx:backup":  "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/tdx.ps1 backup",
+                    "tdx:status":  "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/tdx.ps1 status",
+                    "tdx:deploy":  "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/tdx.ps1 deploy"
+                },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "type":  "module",
+    "devDependencies":  {
+                            "@tailwindcss/cli":  "^4.3.3",
+                            "tailwindcss":  "^4.3.3"
+                        }
 }
