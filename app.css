@@ -206,3 +206,19 @@ html body #app > #sidebar.open {
 html body #app > #sidebar .sidebar-open {
   pointer-events: auto !important;
 }
+
+/* Chat rename modal */
+.theme-dark #renameChatModal section {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+.theme-dark #renameChatModal header,
+.theme-dark #renameChatModal footer {
+  border-color: #334155 !important;
+}
+.theme-dark #renameChatInput {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}

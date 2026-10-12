@@ -27,6 +27,22 @@ function closeSettings() {
   $('settingsModal').classList.add('hidden');
 }
 
+function openRenameModal(chat) {
+  if (!chat) return;
+  $('renameChatId').value = chat.id;
+  $('renameChatInput').value = chat.title || '';
+  $('renameChatModal').classList.remove('hidden');
+  requestAnimationFrame(() => {
+    $('renameChatInput').focus();
+    $('renameChatInput').select();
+  });
+}
+
+function closeRenameModal() {
+  $('renameChatModal').classList.add('hidden');
+  $('renameChatId').value = '';
+}
+
 function openSettings() {
   $('themeSelect').value = appSettings.theme;
   $('responseStyleSelect').value = appSettings.responseStyle;
@@ -80,7 +96,12 @@ function renderList() {
     .sort((a, b) => b.updated - a.updated);
 
   if (!items.length) {
-    $('chatList').innerHTML = `<p class="text-xs text-slate-400 px-2 py-4">${query ? 'No matching chats' : 'No conversations yet'}</p>`;
+    $('chatList').innerHTML = query
+      ? `<div class="px-2 py-4 text-center">
+          <p class="text-sm text-slate-400 mb-3">No matching chats</p>
+          <button id="clearChatSearch" type="button" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100">Clear search</button>
+        </div>`
+      : '<p class="text-xs text-slate-400 px-2 py-4">No conversations yet</p>';
     return;
   }
 
@@ -95,8 +116,8 @@ function renderList() {
     const active = state.current?.id === chat.id;
     html += `<div class="group flex items-center rounded-lg ${active ? 'bg-slate-200/80' : 'hover:bg-slate-200/50'}">
       <button data-open="${escapeHtml(chat.id)}" class="flex-1 min-w-0 text-left px-2.5 py-2 truncate">${escapeHtml(chat.title)}</button>
-      <button data-rename="${escapeHtml(chat.id)}" title="Rename" class="p-1.5 text-slate-400 hover:text-slate-700 opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-      <button data-del="${escapeHtml(chat.id)}" title="Delete" class="p-1.5 mr-1 text-slate-400 hover:text-red-600 opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+      <button data-rename="${escapeHtml(chat.id)}" title="Rename" class="p-1.5 text-slate-400 hover:text-slate-700 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+      <button data-del="${escapeHtml(chat.id)}" title="Delete" class="p-1.5 mr-1 text-slate-400 hover:text-red-600 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
     </div>`;
   }
 
@@ -116,16 +137,7 @@ async function handleChatListClick(event) {
   if (button.dataset.rename) {
     const chat = state.chats.find(item => item.id === button.dataset.rename);
     if (!chat) return;
-    const name = prompt('Rename chat', chat.title);
-    if (!name?.trim()) return;
-    chat.title = name.trim().slice(0, 80);
-    renderList();
-    try {
-      await chatService.persistIndex(state.chats);
-    } catch (error) {
-      toast('Could not save chat name');
-      console.warn('[Chat] rename failed:', error);
-    }
+    openRenameModal(chat);
     return;
   }
 
@@ -765,20 +777,58 @@ async function boot() {
 
   renderList();
 
-  const latestChat = [...state.chats]
-    .filter(chat => chat && chat.id)
-    .sort((a, b) => Number(b.updated || 0) - Number(a.updated || 0))[0];
-
-  if (latestChat) {
-    await openChat(latestChat.id);
-  } else {
-    newChat();
-  }
-
+  // Start with a fresh chat while preserving saved conversations in history.
+  newChat();
   icon();
 }
 
 /* ---------- Event wiring ---------- */
+$('renameChatCancel').onclick = closeRenameModal;
+$('renameChatCancelFooter').onclick = closeRenameModal;
+
+$('renameChatModal').onclick = event => {
+  if (event.target === $('renameChatModal')) closeRenameModal();
+};
+
+$('renameChatInput').addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    $('renameChatSave').click();
+  }
+});
+
+$('renameChatSave').onclick = async () => {
+  const id = $('renameChatId').value;
+  const chat = state.chats.find(item => item.id === id);
+  const name = $('renameChatInput').value.trim();
+  if (!chat) {
+    closeRenameModal();
+    return;
+  }
+  if (!name) {
+    toast('Chat name cannot be empty');
+    $('renameChatInput').focus();
+    return;
+  }
+
+  const previousName = chat.title;
+  chat.title = name.slice(0, 80);
+  $('renameChatSave').disabled = true;
+  try {
+    await chatService.persistIndex(state.chats);
+    renderList();
+    closeRenameModal();
+    toast('Chat renamed');
+  } catch (error) {
+    chat.title = previousName;
+    renderList();
+    toast('Could not save chat name');
+    console.warn('[Chat] rename failed:', error);
+  } finally {
+    $('renameChatSave').disabled = false;
+  }
+};
+
 $('settingsBtn').onclick = openSettings;
 $('settingsClose').onclick = closeSettings;
 $('settingsCancel').onclick = closeSettings;
@@ -812,9 +862,9 @@ $('settingsSave').onclick = async () => {
 };
 
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && !$('settingsModal').classList.contains('hidden')) {
-    closeSettings();
-  }
+  if (event.key !== 'Escape') return;
+  if (!$('settingsModal').classList.contains('hidden')) closeSettings();
+  if (!$('renameChatModal').classList.contains('hidden')) closeRenameModal();
 });
 
 if (window.matchMedia) {
@@ -858,7 +908,16 @@ $('searchInput').oninput = () => {
   clearTimeout(chatSearchTimer);
   chatSearchTimer = setTimeout(renderList, 300);
 };
-$('chatList').onclick = handleChatListClick;
+$('chatList').onclick = event => {
+  if (event.target.closest('#clearChatSearch')) {
+    $('searchInput').value = '';
+    clearTimeout(chatSearchTimer);
+    renderList();
+    $('searchInput').focus();
+    return;
+  }
+  handleChatListClick(event);
+};
 
 $('modelBtn').onclick = event => {
   event.stopPropagation();
