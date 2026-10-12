@@ -9,3 +9,5 @@
 node_modules/
 .git/
 .vercel/
+
+app.outside-click-test.js

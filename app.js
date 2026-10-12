@@ -1077,3 +1077,27 @@ boot();
 })();
 
 
+
+// SIDEBAR_OUTSIDE_CLICK_CAPTURE_FIX
+document.addEventListener("click", function (event) {
+    const sidebar = document.getElementById("sidebar");
+    const openButton = document.getElementById("openSidebar");
+    const scrim = document.getElementById("scrim");
+
+    if (!sidebar) return;
+
+    const isOpen =
+        sidebar.classList.contains("sidebar-open") ||
+        sidebar.classList.contains("open");
+
+    if (!isOpen) return;
+    if (sidebar.contains(event.target)) return;
+    if (openButton && openButton.contains(event.target)) return;
+
+    sidebar.classList.remove("sidebar-open", "open");
+
+    if (scrim) {
+        scrim.classList.add("hidden");
+        scrim.style.setProperty("display", "none", "important");
+    }
+}, true);
