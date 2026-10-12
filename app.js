@@ -10,6 +10,30 @@ import { chatService } from './services/chat.js';
 
 const icon = () => createIcons({ icons });
 
+const DEFAULT_SETTINGS = Object.freeze({
+  theme: 'system',
+  responseStyle: 'balanced',
+});
+let appSettings = { ...DEFAULT_SETTINGS };
+function applyTheme() {
+  const prefersDark = window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = appSettings.theme === 'dark' ||
+    (appSettings.theme === 'system' && prefersDark);
+  document.documentElement.classList.toggle('theme-dark', dark);
+}
+
+function closeSettings() {
+  $('settingsModal').classList.add('hidden');
+}
+
+function openSettings() {
+  $('themeSelect').value = appSettings.theme;
+  $('responseStyleSelect').value = appSettings.responseStyle;
+  $('settingsModal').classList.remove('hidden');
+  icon();
+}
+
 marked.setOptions({ breaks: true, gfm: true });
 const md = value => DOMPurify.sanitize(marked.parse(value || ''));
 
@@ -645,6 +669,7 @@ async function respond() {
     output = await aiService.streamChat({
       messages: chat.messages,
       modelId,
+      responseStyle: appSettings.responseStyle,
       onText: (_chunk, fullText) => {
         output = fullText;
         body.innerHTML = md(output);
@@ -694,6 +719,18 @@ async function boot() {
   }
 
   showApp();
+  try {
+    const savedSettings = await storage.loadSettings();
+    appSettings = {
+      ...DEFAULT_SETTINGS,
+      ...savedSettings,
+      theme: ['system', 'light', 'dark'].includes(savedSettings.theme) ? savedSettings.theme : 'system',
+      responseStyle: ['concise', 'balanced', 'detailed'].includes(savedSettings.responseStyle) ? savedSettings.responseStyle : 'balanced',
+    };
+  } catch (error) {
+    console.warn('[Settings] load failed:', error);
+  }
+  applyTheme();
 
   try {
     const user = await authService.getUser();
@@ -742,6 +779,55 @@ async function boot() {
 }
 
 /* ---------- Event wiring ---------- */
+$('settingsBtn').onclick = openSettings;
+$('settingsClose').onclick = closeSettings;
+$('settingsCancel').onclick = closeSettings;
+
+$('settingsModal').onclick = event => {
+  if (event.target === $('settingsModal')) closeSettings();
+};
+
+$('settingsSave').onclick = async () => {
+  const theme = $('themeSelect').value;
+  const responseStyle = $('responseStyleSelect').value;
+
+  if (!['system', 'light', 'dark'].includes(theme) ||
+      !['concise', 'balanced', 'detailed'].includes(responseStyle)) {
+    toast('Please choose valid settings');
+    return;
+  }
+
+  appSettings = { theme, responseStyle };
+  applyTheme();
+
+  try {
+    await storage.saveSettings(appSettings);
+    closeSettings();
+    toast('Settings saved');
+  } catch (error) {
+    console.warn('[Settings] save failed:', error);
+    closeSettings();
+    toast('Settings applied, but could not save to your account');
+  }
+};
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !$('settingsModal').classList.contains('hidden')) {
+    closeSettings();
+  }
+});
+
+if (window.matchMedia) {
+  const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const updateSystemTheme = () => {
+    if (appSettings.theme === 'system') applyTheme();
+  };
+  if (colorScheme.addEventListener) {
+    colorScheme.addEventListener('change', updateSystemTheme);
+  } else if (colorScheme.addListener) {
+    colorScheme.addListener(updateSystemTheme);
+  }
+}
 $('signInBtn').onclick = async () => {
   try {
     await authService.signIn();

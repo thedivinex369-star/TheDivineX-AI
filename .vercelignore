@@ -1,0 +1,11 @@
+﻿*.bak
+*.backup
+*.sidebar-backup
+*.foundation-backup
+*.before-*
+*.pre-*
+*.smart-picker-before-*
+.puter/screenshots/
+node_modules/
+.git/
+.vercel/

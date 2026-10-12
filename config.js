@@ -21,5 +21,6 @@ export const SUGGESTIONS = [
 export const STORAGE_KEYS = Object.freeze({
   chatIndex: 'nova:index',
   model: 'nova:model',
+  settings: 'nova:settings',
   chat: id => `nova:chat:${id}`,
 });

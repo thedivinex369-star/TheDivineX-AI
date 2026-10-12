@@ -21,11 +21,18 @@ function normalizeMessage(message) {
     };
 }
 
-function buildHistory(messages, limit = 20) {
+function buildHistory(messages, limit = 20, responseStyle = 'balanced') {
     const safeMessages = Array.isArray(messages) ? messages : [];
+    const styleInstructions = {
+        concise: 'Keep answers concise and direct. Prioritize the key answer and avoid unnecessary detail.',
+        balanced: '',
+        detailed: 'Give thorough, well-structured explanations with useful context, examples, and steps when appropriate.',
+    };
+    const styleInstruction = styleInstructions[responseStyle] ?? '';
 
     return [
         SYSTEM,
+        ...(styleInstruction ? [{ role: 'system', content: `Response style preference: ${styleInstruction}` }] : []),
         ...safeMessages.slice(-limit).map(normalizeMessage),
     ];
 }
@@ -294,7 +301,7 @@ export const aiService = Object.freeze({
             });
         }
 
-        const history = buildHistory(messages);
+        const history = buildHistory(messages, 20, responseStyle);
 
         return executeWithFallback(
             (activeModel, activeProvider) =>
@@ -314,6 +321,7 @@ export const aiService = Object.freeze({
         model,
         capability = '',
         onText,
+        responseStyle = 'balanced',
     } = {}) {
         if (typeof onText !== 'function') {
             throw new TypeError(
@@ -348,7 +356,7 @@ export const aiService = Object.freeze({
             });
         }
 
-        const history = buildHistory(messages);
+        const history = buildHistory(messages, 20, responseStyle);
         let streamedText = false;
 
         return executeWithFallback(
@@ -377,11 +385,13 @@ export const aiService = Object.freeze({
         messages,
         modelId,
         onText,
+        responseStyle = 'balanced',
     }) {
         const result = await this.stream({
             messages,
             model: modelId,
             onText,
+            responseStyle,
         });
 
         return result.text;

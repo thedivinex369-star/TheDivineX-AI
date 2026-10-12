@@ -74,3 +74,135 @@ body{font-family:Inter,system-ui,sans-serif}
     translate: 0 0 !important;
   }
 }
+/* Settings: dark appearance overrides */
+.theme-dark body {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+}
+.theme-dark #app,
+.theme-dark main,
+.theme-dark #scroller {
+  background-color: #0b1220 !important;
+  color: #e5e7eb !important;
+}
+.theme-dark #sidebar {
+  background-color: #111827 !important;
+  border-color: #273449 !important;
+  color: #e5e7eb !important;
+}
+.theme-dark header,
+.theme-dark #composer {
+  background-color: #111827 !important;
+  border-color: #334155 !important;
+  color: #e5e7eb !important;
+}
+.theme-dark #input {
+  color: #f8fafc !important;
+}
+.theme-dark #settingsModal section {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+.theme-dark #settingsModal select {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+.theme-dark #settingsModal header,
+.theme-dark #settingsModal footer {
+  border-color: #334155 !important;
+}
+.theme-dark #settingsModal p {
+  color: #94a3b8 !important;
+}
+.theme-dark #modelMenu {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+.theme-dark .prose-nova {
+  color: #e5e7eb !important;
+}
+.theme-dark .prose-nova code {
+  background-color: #1e293b !important;
+}
+.theme-dark .prose-nova th {
+  background-color: #1e293b !important;
+}
+/* PERMANENT DESKTOP SIDEBAR VISIBILITY FIX */
+@media screen and (min-width: 768px) {
+  html body #app > #sidebar {
+    display: flex !important;
+    position: relative !important;
+    inset: auto !important;
+    flex: 0 0 18rem !important;
+    width: 18rem !important;
+    min-width: 18rem !important;
+    max-width: 18rem !important;
+    height: 100% !important;
+    align-self: stretch !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    translate: 0 0 !important;
+    margin-left: 0 !important;
+    pointer-events: auto !important;
+  }
+
+  html body #app {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+/* SIDEBAR_AUTO_HIDE_PERMANENT_FIX */
+#sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  width: 18rem !important;
+  max-width: 85vw !important;
+  z-index: 50 !important;
+  transform: none !important;
+  translate: -100% 0 !important;
+  transition: translate 0.25s ease-in-out !important;
+}
+#sidebar.sidebar-open,
+#sidebar.open {
+  translate: 0 0 !important;
+}
+#scrim {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 40 !important;
+}
+#scrim.hidden { display: none !important; }
+#scrim:not(.hidden) { display: block !important; }
+/* SIDEBAR_FINAL_SPECIFICITY_OVERRIDE */
+html body #app > #sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  width: 18rem !important;
+  max-width: 85vw !important;
+  z-index: 50 !important;
+  margin-left: 0 !important;
+  transform: none !important;
+  translate: -100% 0 !important;
+  pointer-events: none !important;
+  transition: translate 0.25s ease-in-out !important;
+}
+html body #app > #sidebar.sidebar-open,
+html body #app > #sidebar.open {
+  translate: 0 0 !important;
+  pointer-events: auto !important;
+}
+html body #app > #sidebar .sidebar-open {
+  pointer-events: auto !important;
+}

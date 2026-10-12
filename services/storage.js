@@ -45,4 +45,14 @@ export const storage = Object.freeze({
   async saveModel(modelId) {
     await getPuter().kv.set(STORAGE_KEYS.model, modelId);
   },
+
+  async loadSettings() {
+    const value = await getPuter().kv.get(STORAGE_KEYS.settings);
+    const parsed = parseStored(value, {});
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  },
+
+  async saveSettings(settings) {
+    await getPuter().kv.set(STORAGE_KEYS.settings, settings);
+  },
 });
