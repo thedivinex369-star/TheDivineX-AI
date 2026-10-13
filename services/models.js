@@ -1,4 +1,4 @@
-﻿import { MODELS } from "../config.js";
+import { MODELS } from "../config.js";
 import { normalizeCapabilities, DEFAULT_CAPABILITIES } from "./capabilities.js";
 
 const FALLBACK_MODELS = Array.isArray(MODELS) ? MODELS : [];
@@ -12,7 +12,9 @@ const CATEGORY_ORDER = Object.freeze([
 ]);
 
 function clean(value) {
-  return String(value ?? "").trim();
+  return String(value ?? "")
+    .replace(/&#x49;nfron/gi, "Infron")
+    .trim();
 }
 
 function providerLabel(provider) {

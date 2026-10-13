@@ -27,22 +27,6 @@ function closeSettings() {
   $('settingsModal').classList.add('hidden');
 }
 
-function openRenameModal(chat) {
-  if (!chat) return;
-  $('renameChatId').value = chat.id;
-  $('renameChatInput').value = chat.title || '';
-  $('renameChatModal').classList.remove('hidden');
-  requestAnimationFrame(() => {
-    $('renameChatInput').focus();
-    $('renameChatInput').select();
-  });
-}
-
-function closeRenameModal() {
-  $('renameChatModal').classList.add('hidden');
-  $('renameChatId').value = '';
-}
-
 function openSettings() {
   $('themeSelect').value = appSettings.theme;
   $('responseStyleSelect').value = appSettings.responseStyle;
@@ -96,12 +80,7 @@ function renderList() {
     .sort((a, b) => b.updated - a.updated);
 
   if (!items.length) {
-    $('chatList').innerHTML = query
-      ? `<div class="px-2 py-4 text-center">
-          <p class="text-sm text-slate-400 mb-3">No matching chats</p>
-          <button id="clearChatSearch" type="button" class="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100">Clear search</button>
-        </div>`
-      : '<p class="text-xs text-slate-400 px-2 py-4">No conversations yet</p>';
+    $('chatList').innerHTML = `<p class="text-xs text-slate-400 px-2 py-4">${query ? 'No matching chats' : 'No conversations yet'}</p>`;
     return;
   }
 
@@ -116,8 +95,8 @@ function renderList() {
     const active = state.current?.id === chat.id;
     html += `<div class="group flex items-center rounded-lg ${active ? 'bg-slate-200/80' : 'hover:bg-slate-200/50'}">
       <button data-open="${escapeHtml(chat.id)}" class="flex-1 min-w-0 text-left px-2.5 py-2 truncate">${escapeHtml(chat.title)}</button>
-      <button data-rename="${escapeHtml(chat.id)}" title="Rename" class="p-1.5 text-slate-400 hover:text-slate-700 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
-      <button data-del="${escapeHtml(chat.id)}" title="Delete" class="p-1.5 mr-1 text-slate-400 hover:text-red-600 opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+      <button data-rename="${escapeHtml(chat.id)}" title="Rename" class="p-1.5 text-slate-400 hover:text-slate-700 opacity-0 group-hover:opacity-100"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+      <button data-del="${escapeHtml(chat.id)}" title="Delete" class="p-1.5 mr-1 text-slate-400 hover:text-red-600 opacity-0 group-hover:opacity-100"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
     </div>`;
   }
 
@@ -137,7 +116,16 @@ async function handleChatListClick(event) {
   if (button.dataset.rename) {
     const chat = state.chats.find(item => item.id === button.dataset.rename);
     if (!chat) return;
-    openRenameModal(chat);
+    const name = prompt('Rename chat', chat.title);
+    if (!name?.trim()) return;
+    chat.title = name.trim().slice(0, 80);
+    renderList();
+    try {
+      await chatService.persistIndex(state.chats);
+    } catch (error) {
+      toast('Could not save chat name');
+      console.warn('[Chat] rename failed:', error);
+    }
     return;
   }
 
@@ -172,7 +160,7 @@ function setModel(model) {
   $('modelLabel').textContent = model.name || model.id;
   $('modelHint').textContent =
     model.hint ||
-    `${model.providerLabel || model.provider || 'Puter'} Â· ${model.id}`;
+    `${model.providerLabel || model.provider || 'Puter'} · ${model.id}`;
 
   renderModelMenu();
 }
@@ -357,7 +345,7 @@ function renderModelMenu() {
               model.id === state.model.id ? 'bg-slate-50' : ''
             }"
           >
-            <span class="mt-0.5 text-amber-500">â˜…</span>
+            <span class="mt-0.5 text-amber-500">&#9733;</span>
 
             <span class="flex-1 min-w-0">
               <span class="block text-sm font-medium truncate">
@@ -403,7 +391,7 @@ function renderModelMenu() {
               ${escapeHtml(
                 model.desc ||
                 model.description ||
-                `${model.providerLabel || model.provider || 'Puter'} Â· ${model.id}`
+                `${model.providerLabel || model.provider || 'Puter'} · ${model.id}`
               )}
             </span>
           </span>
@@ -609,7 +597,6 @@ async function openChat(id) {
   try {
     const messages = await chatService.load(id);
     state.current = { id, messages: Array.isArray(messages) ? messages : [] };
-    sessionStorage.setItem('tdx:activeChatId', id);
     input.value = '';
     input.style.height = 'auto';
     input.scrollTop = 0;
@@ -628,7 +615,6 @@ async function openChat(id) {
 function newChat() {
   if (state.busy) return;
   state.current = null;
-  sessionStorage.removeItem('tdx:activeChatId');
   input.value = '';
   input.style.height = 'auto';
   input.scrollTop = 0;
@@ -779,65 +765,22 @@ async function boot() {
 
   renderList();
 
-  // Restore the active chat after refresh.
-  const activeChatId = sessionStorage.getItem('tdx:activeChatId');
-  if (activeChatId && state.chats.some(chat => chat.id === activeChatId)) {
-    await openChat(activeChatId);
+  const latestChat = [...state.chats]
+    .filter(chat => chat && chat.id)
+    .sort((a, b) => Number(b.updated || 0) - Number(a.updated || 0))[0];
+
+  if (latestChat) {
+    await openChat(latestChat.id);
   } else {
-    sessionStorage.removeItem('tdx:activeChatId');
     newChat();
   }
+
   icon();
 }
 
 /* ---------- Event wiring ---------- */
-$('renameChatCancel').onclick = closeRenameModal;
-$('renameChatCancelFooter').onclick = closeRenameModal;
 
-$('renameChatModal').onclick = event => {
-  if (event.target === $('renameChatModal')) closeRenameModal();
-};
 
-$('renameChatInput').addEventListener('keydown', event => {
-  if (event.key === 'Enter') {
-    event.preventDefault();
-    $('renameChatSave').click();
-  }
-});
-
-$('renameChatSave').onclick = async () => {
-  const id = $('renameChatId').value;
-  const chat = state.chats.find(item => item.id === id);
-  const name = $('renameChatInput').value.trim();
-  if (!chat) {
-    closeRenameModal();
-    return;
-  }
-  if (!name) {
-    toast('Chat name cannot be empty');
-    $('renameChatInput').focus();
-    return;
-  }
-
-  const previousName = chat.title;
-  chat.title = name.slice(0, 80);
-  $('renameChatSave').disabled = true;
-  try {
-    await chatService.persistIndex(state.chats);
-    renderList();
-    closeRenameModal();
-    toast('Chat renamed');
-  } catch (error) {
-    chat.title = previousName;
-    renderList();
-    toast('Could not save chat name');
-    console.warn('[Chat] rename failed:', error);
-  } finally {
-    $('renameChatSave').disabled = false;
-  }
-};
-
-// TDX_CHAT_EXPORT_V1
 function exportCurrentChat(format) {
   const current = state.current;
   if (!current || !current.id || !Array.isArray(current.messages) || !current.messages.length) {
@@ -898,6 +841,111 @@ function exportCurrentChat(format) {
   toast(`Chat exported as ${extension.toUpperCase()}`);
 }
 
+// TDX_CHAT_IMPORT_V1
+async function importChatFromFile(file) {
+  if (!file) return;
+
+  if (state.busy) {
+    toast('Wait for the current response to finish');
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    toast('JSON file must be smaller than 5 MB');
+    return;
+  }
+
+  let data;
+  try {
+    data = JSON.parse(await file.text());
+  } catch {
+    toast('Invalid JSON file');
+    return;
+  }
+
+  const imported = data?.chat;
+  if (
+    data?.format !== 'TheDivineX-AI-chat' ||
+    data?.version !== 1 ||
+    !imported ||
+    typeof imported.title !== 'string' ||
+    !Array.isArray(imported.messages) ||
+    imported.messages.length === 0 ||
+    imported.messages.length > 10000
+  ) {
+    toast('Unsupported or invalid chat backup');
+    return;
+  }
+
+  const validMessages = imported.messages.every(message =>
+    message &&
+    typeof message === 'object' &&
+    !Array.isArray(message) &&
+    ['user', 'assistant'].includes(message.role) &&
+    typeof message.content === 'string'
+  );
+
+  if (!validMessages) {
+    toast('Chat backup contains invalid messages');
+    return;
+  }
+
+  const title = imported.title.trim().slice(0, 48) || 'Imported chat';
+  const resolvedModel = typeof imported.model === 'string'
+    ? modelService.resolve(imported.model)
+    : null;
+  const modelId = resolvedModel?.id || state.model.id;
+
+  const meta = chatService.createMeta(title, modelId);
+  meta.title = title;
+  meta.updated = Date.now();
+
+  const messages = imported.messages.map(message => ({
+    role: message.role,
+    content: message.content,
+    ...(typeof message.failed === 'boolean' ? { failed: message.failed } : {}),
+    ...(message.feedback === 'like' || message.feedback === 'dislike'
+      ? { feedback: message.feedback }
+      : {})
+  }));
+
+  const previousChats = [...state.chats];
+  state.chats = [...previousChats, meta];
+
+  try {
+    await chatService.persist({ id: meta.id, messages }, state.chats);
+    renderList();
+    toast('Chat imported successfully');
+    await openChat(meta.id);
+  } catch (error) {
+    state.chats = previousChats;
+
+    try {
+      await storage.deleteChat(meta.id);
+      await chatService.persistIndex(state.chats);
+    } catch (cleanupError) {
+      console.warn('[Import] Cleanup failed:', cleanupError);
+    }
+
+    renderList();
+    toast('Could not import chat');
+    console.warn('[Import] Failed:', error);
+  }
+}
+
+$('importChatBtn').onclick = () => {
+  if (state.busy) {
+    toast('Wait for the current response to finish');
+    return;
+  }
+  $('importChatFile').click();
+};
+
+$('importChatFile').onchange = async event => {
+  const file = event.target.files?.[0];
+  event.target.value = '';
+  if (file) await importChatFromFile(file);
+};
 $('exportChatBtn').onclick = event => {
   const existing = $('exportChatMenu');
   if (existing) {
@@ -965,9 +1013,9 @@ $('settingsSave').onclick = async () => {
 };
 
 document.addEventListener('keydown', event => {
-  if (event.key !== 'Escape') return;
-  if (!$('settingsModal').classList.contains('hidden')) closeSettings();
-  if (!$('renameChatModal').classList.contains('hidden')) closeRenameModal();
+  if (event.key === 'Escape' && !$('settingsModal').classList.contains('hidden')) {
+    closeSettings();
+  }
 });
 
 if (window.matchMedia) {
@@ -984,7 +1032,6 @@ if (window.matchMedia) {
 $('signInBtn').onclick = async () => {
   try {
     await authService.signIn();
-    sessionStorage.removeItem('tdx:activeChatId');
     await boot();
   } catch (error) {
     console.warn('[Auth] sign in failed:', error);
@@ -1012,16 +1059,7 @@ $('searchInput').oninput = () => {
   clearTimeout(chatSearchTimer);
   chatSearchTimer = setTimeout(renderList, 300);
 };
-$('chatList').onclick = event => {
-  if (event.target.closest('#clearChatSearch')) {
-    $('searchInput').value = '';
-    clearTimeout(chatSearchTimer);
-    renderList();
-    $('searchInput').focus();
-    return;
-  }
-  handleChatListClick(event);
-};
+$('chatList').onclick = handleChatListClick;
 
 $('modelBtn').onclick = event => {
   event.stopPropagation();
@@ -1238,29 +1276,3 @@ boot();
         init();
     }
 })();
-
-
-
-// SIDEBAR_OUTSIDE_CLICK_CAPTURE_FIX
-document.addEventListener("click", function (event) {
-    const sidebar = document.getElementById("sidebar");
-    const openButton = document.getElementById("openSidebar");
-    const scrim = document.getElementById("scrim");
-
-    if (!sidebar) return;
-
-    const isOpen =
-        sidebar.classList.contains("sidebar-open") ||
-        sidebar.classList.contains("open");
-
-    if (!isOpen) return;
-    if (sidebar.contains(event.target)) return;
-    if (openButton && openButton.contains(event.target)) return;
-
-    sidebar.classList.remove("sidebar-open", "open");
-
-    if (scrim) {
-        scrim.classList.add("hidden");
-        scrim.style.setProperty("display", "none", "important");
-    }
-}, true);

@@ -403,6 +403,9 @@
   .h-\[100dvh\] {
     height: 100dvh;
   }
+  .h-dvh {
+    height: 100dvh;
+  }
   .h-full {
     height: 100%;
   }
@@ -967,6 +970,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .opacity-0 {
+    opacity: 0%;
+  }
   .opacity-100 {
     opacity: 100%;
   }
@@ -1010,6 +1016,11 @@
   }
   .group-open\:rotate-45:is(:where(.group):is([open], :popover-open, :open) *) {
     rotate: 45deg;
+  }
+  @media (hover: hover) {
+    .group-hover\:opacity-100:is(:where(.group):hover *) {
+      opacity: 100%;
+    }
   }
   .focus-within\:border-slate-300:focus-within {
     border-color: var(--color-slate-300);

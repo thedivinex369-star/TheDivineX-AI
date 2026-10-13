@@ -1,4 +1,4 @@
-﻿*.bak
+*.bak
 *.backup
 *.sidebar-backup
 *.foundation-backup
@@ -11,3 +11,9 @@ node_modules/
 .vercel/
 
 app.outside-click-test.js
+*.tmp
+*.fixed.js
+*.restore.js
+encoding-scan-report.txt
+fix-symbols.ps1
+*.backup_*

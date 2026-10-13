@@ -26,7 +26,7 @@ window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&
     <meta name="apple-mobile-web-app-title" content="TheDivineX">
     <!-- /puter-pwa -->
 </head>
-<body class="bg-white text-slate-900 antialiased h-[100dvh] overflow-hidden">
+<body class="bg-white text-slate-900 antialiased h-dvh overflow-hidden">
 
 <!-- Sign-in gate -->
 <div id="gate" class="hidden h-full flex items-center justify-center px-6">
@@ -85,7 +85,9 @@ window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&
       </div>
       <div class="ml-auto flex items-center gap-1">
         <button id="settingsBtn" title="Settings" aria-label="Settings" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="settings" class="w-5 h-5"></i></button>
-        <button id="exportChatBtn" type="button" title="Export current chat" aria-label="Export current chat" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="download" class="w-5 h-5"></i></button>
+        <button id="importChatBtn" type="button" title="Import chat from JSON" aria-label="Import chat from JSON" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="upload" class="w-5 h-5"></i></button>
+<input id="importChatFile" type="file" accept=".json,application/json" hidden>
+<button id="exportChatBtn" type="button" title="Export current chat" aria-label="Export current chat" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="download" class="w-5 h-5"></i></button>
         <button id="newChatTop" title="New chat" class="p-2 rounded-lg hover:bg-slate-100"><i data-lucide="square-pen" class="w-5 h-5"></i></button>
       </div>
     </header>
@@ -144,24 +146,6 @@ window.addEventListener('error',function(e){var t=e&&e.target;if(t&&t!==window&&
     <footer class="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
       <button id="settingsCancel" type="button" class="rounded-xl px-4 py-2 text-sm font-medium hover:bg-slate-100">Cancel</button>
       <button id="settingsSave" type="button" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">Save settings</button>
-    </footer>
-  </section>
-</div>
-
-<div id="renameChatModal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="renameChatTitle">
-  <section class="w-full max-w-md rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-2xl">
-    <header class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-      <h2 id="renameChatTitle" class="text-lg font-semibold">Rename chat</h2>
-      <button id="renameChatCancel" type="button" aria-label="Cancel rename" class="rounded-lg p-2 hover:bg-slate-100"><i data-lucide="x" class="h-5 w-5"></i></button>
-    </header>
-    <div class="p-5">
-      <label for="renameChatInput" class="mb-1.5 block text-sm font-medium">Chat name</label>
-      <input id="renameChatInput" type="text" maxlength="80" autocomplete="off" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" placeholder="Enter chat name">
-      <input id="renameChatId" type="hidden">
-    </div>
-    <footer class="flex justify-end gap-2 border-t border-slate-100 px-5 py-4">
-      <button id="renameChatCancelFooter" type="button" class="rounded-xl px-4 py-2 text-sm font-medium hover:bg-slate-100">Cancel</button>
-      <button id="renameChatSave" type="button" class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">Save name</button>
     </footer>
   </section>
 </div>
