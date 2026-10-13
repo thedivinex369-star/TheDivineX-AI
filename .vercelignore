@@ -17,3 +17,4 @@ app.outside-click-test.js
 encoding-scan-report.txt
 fix-symbols.ps1
 *.backup_*
+*.backup.js
