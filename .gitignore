@@ -33,3 +33,7 @@ services/models.js.live-capability-backup
 README.github-backup.txt
 encoding-scan-report.txt
 fix-symbols.ps1
+
+# Temporary Tailwind diagnostic files
+.tdx-tailwind-test.css
+.tdx-tailwind-test-output.css
