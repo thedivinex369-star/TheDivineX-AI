@@ -23,3 +23,13 @@ Thumbs.db
 services/models.tmp.js
 services/models.js.live-capability-backup
 .vercel
+
+# Local temporary files and repair artifacts
+*.backup_*
+*.backup.*
+*.encoding-fix.tmp
+*.fixed.js
+*.restore.js
+README.github-backup.txt
+encoding-scan-report.txt
+fix-symbols.ps1

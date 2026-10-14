@@ -18,3 +18,16 @@ encoding-scan-report.txt
 fix-symbols.ps1
 *.backup_*
 *.backup.js
+
+# Local backups and temporary repair files
+*.backup_*
+*.backup
+*.backup.*
+*.sidebar-backup
+*.foundation-backup
+*.encoding-fix.tmp
+*.fixed.js
+*.restore.js
+README.github-backup.txt
+encoding-scan-report.txt
+fix-symbols.ps1
